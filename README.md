@@ -7,3 +7,11 @@ Fun fact: A previous job title I had was 'Component Assembler Builder' and there
 
 - NASM [The Netwide Assembler](https://www.nasm.us/doc/)  
 - [INT80h.org](http://www.int80h.org/)  
+
+# Compiler, link and test. 
+```
+mkdir ./build
+nasm -f elf64 -o ./build/[output_file_name] input_file.asm
+ld -m elf_x86_64 -s -o ./build/[file_name] ./build/[output_file_name]
+./build/[file_name]
+```
