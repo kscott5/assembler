@@ -41,3 +41,17 @@ access.the.bsd.kernel:
 %macro	sys.write	0
 	system SYS_write
 %endmacro
+
+%macro sys.prompt 2
+    mov edx, %2 ;length of message
+    mov ecx, %1 ;message text
+    mov ebx, stdout
+    sys.write
+%endmacro
+
+%macro sys.getinput 2
+    mov edx, %2 ;bytes read
+    mov ecx, %1 ;variable
+    mov ebx, stdin
+    sys.read
+%endmacro
