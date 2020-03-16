@@ -1,36 +1,46 @@
 %include 'system.inc'
 
-%macro prompt 2
-    mov edx, %2 ;length of prompt text
-    mov ecx, %1 ;prompt text
+
+%macro showmsg 2
+    mov edx, %2 ;length of message
+    mov ecx, %1 ;message text
     mov ebx, stdout
     sys.write
 %endmacro
 
-%macro prompt_input 0
+%macro getdata 2
+    mov edx, %2 ;bytes read
+    mov ebx, stdin
+    mov ecx, %1
     sys.read
-    or eax, eax
-    je .exit
-
-    prompt eax, $-eax
-    exit:
-        ret
 %endmacro
 
-section .data
-    prompt_gn       db 'Enter your given name(s): ', 0Ah
-    prompt_gn_len   equ $-prompt_gn
+; initialization of read variables
+; https://nasm.us/doc/nasmdoc7.html
+; 7.5.1 win32 Extensions to the SECTION Directive
+section .rdata
+    gn_msg       db  'Enter your given name(s): '
+    gn_msg_len   equ $-gn_msg
 
-    prompt_sn       db 'Enter your sirname: ', 0Ah
-    prompt_sn_len   equ $-prompt_sn
+    sn_msg       db  'Enter your sirname: '
+    sn_msg_len   equ $-sn_msg
+
+; uninitialization of read/write variables
+; https://nasm.us/doc/nasmdoc3.html
+; 3.2.2 RESB and Friends: Declaring Uninitialized Data
+section .bss
+    sn_data       resb 100
+    gn_data       resb 100
 
 section .text
     global _start
     
 _start:
 
-prompt prompt_sn, prompt_sn_len
-sys.read
-prompt prompt_gn, prompt_gn_len
+showmsg sn_msg, sn_msg_len
+getdata sn_data, 100
+
+showmsg gn_msg, gn_msg_len
+getdata gn_data, 100
 
 sys.exit
